@@ -107,3 +107,18 @@ def pytest_collection_modifyitems(
         # elif 'mul' in item.nodeid:
         #     item.add_marker(pytest.mark.mul)
 
+# 注册一个命令行参数env，定义分组hogwarts ,将参数 env放在hogwards分组下
+# env默认值是test,表示测试环境，另外还有两个值 （dev,st）不同的环境读取不同的数据
+# parser：用户命令行参数与ini文件值的解析器
+def pytest_addoption(parser):
+    mygroup=parser.getgroup("hogwarts")        # group 将下面所有的option都展示在这个group下
+    mygroup.addoption("--env",                 # 注册一个命令行选项
+                      default='test',          # 默认值
+                      dest='dev'or'st',        # 存储的变量
+                      help='set your run env'  # 参数说明
+                      )
+
+
+@pytest.fixture(scope='session')
+def cmdoption(request):
+    return request.config.getoption("--env",default='test')
